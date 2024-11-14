@@ -15,11 +15,12 @@ os.chdir(Path.cwd() / 'bdog')
 ctk.set_appearance_mode('light')
 ctk.set_default_color_theme('dark-blue')
 
+# Inserted a comment to test
+
 def main():
     class MainMenu(ctk.CTkFrame):
         def __init__(self, master, mainMenuItems):
             super().__init__(master)
-
             # Set app fonts
             self.defaultFont = ctk.CTkFont(
                 family='Helvetica Now Text',
@@ -33,7 +34,6 @@ def main():
                 family='Helvetica Now Text',
                 size=14
             )
-
             # self.master = master
             self.selectedButton = None  # Track currently selected button
             # Button styles
@@ -51,9 +51,7 @@ def main():
                 'font': self.defaultFont,
                 }
             # Main menu buttons
-            self.mainMenuFrame = ctk.CTkFrame(
-                self,
-                )
+            self.mainMenuFrame = ctk.CTkFrame(self)
             self.mainMenuFrame.grid(row=0, column=0, columnspan=len(mainMenuItems), padx=10, pady=10)
             self.mainMenuButtons = {}
             for i, item in enumerate(mainMenuItems):
@@ -115,7 +113,6 @@ def main():
                 command=lambda: app.quit(),
                 **self.exitButtonStyle
                 ).grid(row=0, column=1, padx=10, pady=10)#, sticky='e')
-
             # Sub-menu frame (created once, reused)
             self.subMenuFrame = ctk.CTkFrame(
                 self,
@@ -126,7 +123,6 @@ def main():
                 self,
                 )
             self.messageFrame.grid(row=2, column=0, columnspan=len(mainMenuItems)+2, padx=10, pady=10, sticky='eswn')
-
             # Get message frame color
             self.messageFrameFgColor = self.messageFrame.cget('fg_color')
 
