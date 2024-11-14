@@ -31,7 +31,7 @@ listDir = documents / 'Work' / 'Crosswords' / 'Lists' / 'Masters'
 masterFile = listDir / 'Logan_Gold_Master.txt'
 xwiFile = listDir / 'XwiJeffChenList.txt'
 clueFile = listDir / 'Clue Database.txt'
-masterFile_backup = listDir / 'Logan_Gold_Master.bak'
+masterFileBackup = listDir / 'Logan_Gold_Master.bak'
 # Define Classes
 class l:
     """Defines a set of lines for drawing grids."""

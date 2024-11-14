@@ -1,8 +1,5 @@
-import sys
-sys.path.append('.\.library')
-from logan import *
-os.system('cls')
-
+from library.beachdoglib import *
+from pathlib import Path
 
 def main():
     def sw1(scr: int) -> int:
@@ -15,7 +12,7 @@ def main():
 
     # Initialize the score grid and counters
     inc, dec, unc = [0] * 6, [0] * 6, [0] * 6
-    sc = [[0] * 6 for _ in range(6)]
+    sc = [[0] * 6 for x in range(6)]
 
     # Load dictionaries
     mDict = myDict(min_score=0)
@@ -47,9 +44,9 @@ def main():
     message = ''
 
     # Output header
-    message += f'        CHANGES IN SCORE FROM JEFF\'S LIST\n\n'
-    message += f'   OLD  {'-'*36} NEW SCORE {'-'*36}\n'
-    message += f' SCORE     20       30        40        50       60        70        80          DEC       UNC       INC\n'
+    message += f'CHANGES IN SCORE FROM JEFF\'S LIST\n\n'
+    message += f'  OLD  {'-'*36} NEW SCORE {'-'*36}\n'
+    message += f'SCORE        20       30       40       50       60       70       80       DEC       UNC       INC\n'
     message += f'  {'-'*5} {'-'*83}\n'
 
     # Output the table of scores
@@ -62,7 +59,7 @@ def main():
 
     # Output totals
     message += (
-        f'TOTAL {changed: 9)} changes out of {total: {len(str(total)) + 1}} processed '
+        f'TOTAL {changed: 9} changes out of {total: {len(str(total)) + 1}} processed '
         f'({percent:2>1%}){decreasedTotal: 13} {unchangedTotal: 9}'
         f'{increasedTotal: 10}\n\n'
         )

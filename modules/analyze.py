@@ -1,9 +1,5 @@
-import sys
-sys.path.append('.library')
-from logan import *
-os.system('cls')
-
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+from library.beachdoglib import *
+from pathlib import Path
 
 def loadAcrossLiteFile(inputFile:Path) -> list[str]:
     """Creates the master grid list from the input file"""

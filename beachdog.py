@@ -1,17 +1,14 @@
 import os
 import sys
-
-import beachdog.modules.analyze as analyze
-import beachdog.modules.changes as changes
+import modules.analyze as analyze
+import modules.changes as changes
 import customtkinter as ctk
-
-from beachdog.library.beachdoglib import *
+from library.beachdoglib import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
-os.chdir(Path.cwd() / 'bdog')
 ctk.set_appearance_mode('light')
 ctk.set_default_color_theme('dark-blue')
 
@@ -250,7 +247,7 @@ def main():
             self.regexApp.title(' Regex Search')
             self.after(50, lambda: self.regexApp.attributes('-topmost', 1))
             self.after(50, lambda: self.regexApp.attributes('-topmost', 0))
-            self.after(200, lambda: self.regexApp.iconbitmap('bdogicon.ico'))
+            # self.after(200, lambda: self.regexApp.iconbitmap('assets.bdogicon.ico'))
             # self.regexApp.resizable(False, False)
             self.regexString = ''
             # Create master frames
@@ -342,12 +339,14 @@ def main():
 
             self.m = ctk.StringVar()
             self.m.set(changes.main())
-            self.messageLabel = ctk.CTkLabel(
+            self.messageLabel = ctk.CTkTextbox(
                 self.changesResultPopup,
-                fg_color='transparent',
-                text=self.m.get(),
+                width=1000,
+                height=250,
+                bg_color='transparent',
                 font=self.monoFont,
                 )
+            self.messageLabel.insert('0.0', self.m.get())
             self.messageLabel.grid(row=0, column=0, padx=10, pady=10, sticky='eswn')
 
         def runAnalyzePuzzle(self):
@@ -389,7 +388,7 @@ def main():
                             text=self.puzzleGrid[i][j],
                             fill='#000000',
                             anchor='mm',
-                            font=ImageFont.truetype('Monaco.ttf', int(self.blockSize / 2 + 3))
+                            font=ImageFont.truetype('assets\\Monaco.ttf', int(self.blockSize / 2 + 3))
                         )
                 # Draw grid lines
                 for i in range(self.rows + 1):
@@ -714,7 +713,7 @@ def main():
             self.puzzleAnalysis.title(f' Puzzle Analysis - {Path(self.inputFile).stem}')
             self.after(200, lambda: self.puzzleAnalysis.attributes('-topmost', 1))
             self.after(200, lambda: self.puzzleAnalysis.attributes('-topmost', 0))
-            self.after(200, lambda: self.puzzleAnalysis.iconbitmap('bdogicon.ico'))
+            # self.after(200, lambda: self.puzzleAnalysis.iconbitmap('assets.bdogicon.ico'))
             # Define frames
             self.masterFrame = ctk.CTkFrame(self.puzzleAnalysis, width=900, height=480, fg_color='#ffffff')
             self.puzzleViewFrame = ctk.CTkFrame(self.masterFrame, fg_color='#ffffff')
@@ -793,7 +792,7 @@ def main():
     class App(ctk.CTk):
         def __init__(self):
             super().__init__()
-            self.iconbitmap('bdogicon.ico')
+            self.iconbitmap('assets/bdogicon.ico')
             self.title(' Beach Dog Crosswords')
             self.resizable(False,False)
             # Set menu Items
