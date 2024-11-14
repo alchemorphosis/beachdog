@@ -1,5 +1,3 @@
-import os
-import sys
 import modules.analyze as analyze
 import modules.changes as changes
 import customtkinter as ctk
