@@ -1,5 +1,5 @@
 import customtkinter as ctk
-import library.beachdoglib as library
+import library.beachdoglib as lib
 import modules.analyze as analyze
 import modules.changes as changes
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -199,7 +199,7 @@ def main():
                     self.fileSaveButton.grid_remove()
                     self.filenameSavedToLabel.grid_remove()
                     # Perform the search
-                    self.regexResults = sorted(library.regx(self.regexString), key=len)
+                    self.regexResults = sorted(lib.regx(self.regexString), key=len)
                     # Display the results, if any
                     if len(self.regexResults) == 10000:
                         self.max = '(max) '
@@ -227,13 +227,13 @@ def main():
                 # Disable Save to File button
                 self.fileSaveButton.configure(state='enabled')
                 # Get save filename from user and write list to file
-                self.outputFile = library.userInputSaveAsFile()
+                self.outputFile = lib.userInputSaveAsFile()
                 self.after(50, lambda: self.regexApp.attributes('-topmost', 1))
                 self.after(50, lambda: self.regexApp.attributes('-topmost', 0))
                 # Write result to file
                 if self.outputFile:
                     self.fileSaveButton.grid_remove()
-                    library.listToFile(self.regexResults, self.outputFile)
+                    lib.listToFile(self.regexResults, self.outputFile)
                     # Inform results of file save
                     self.fileFrameMessageLabel.configure(text=f'{len(self.regexResults):,} results saved to')
                     self.filenameSavedToLabel.configure(text=f'{Path(self.outputFile).name}')
@@ -399,7 +399,7 @@ def main():
                     x = j * self.blockSize# + self.lineWidth
                     draw.line(((x, 0), (x, self.canvasWidth - self.lineWidth)), fill='#000000', width=self.lineWidth)
                 # PIL image can be saved as .png .jpg .gif or .bmp file (among others)
-                outputFile = library.userInputSaveAsFile()
+                outputFile = lib.userInputSaveAsFile()
                 if outputFile:
                     image1.save(outputFile)
                 else:
@@ -678,7 +678,7 @@ def main():
             self.lineWidth = 2
             self.analyzeTabButtonNames = ['Stats', 'Lengths', 'Words', 'Crossers']
 
-            self.inputFile = library.userInputOpenFilePath()
+            self.inputFile = lib.userInputOpenFilePath()
             self.puzzleGrid = analyze.loadAcrossLiteFile(self.inputFile)
             self.rows = len(self.puzzleGrid)
             self.cols = len(self.puzzleGrid[0])
@@ -750,14 +750,14 @@ def main():
 
         def runFetchClues(self):
             # Get the puzzle file from the user
-            self.inputFile = library.userInputOpenFilePath('Select puzzle to get clues for')
+            self.inputFile = lib.userInputOpenFilePath('Select puzzle to get clues for')
             # Extract the puzzle's words
             self.puzzleGrid = analyze.loadAcrossLiteFile(self.inputFile)
             self.numbering, self.across, self.down = analyze.puzzleLayout(self.puzzleGrid)
             self.words = analyze.fillWordsList(self.across, self.down)
 
             # Open the file containing the clues
-            with open(library.clueFile, 'r') as f:
+            with open(lib.clueFile, 'r') as f:
                 clueList = [line.strip() for line in f if line.strip()]
             
             # Find clues for words in the puzzle
@@ -818,7 +818,10 @@ def main():
             def undoButtonClicked():
                 pass
 
-                    # Create adn open the main popup window
+            # Set column width
+            columnWidth = 160
+
+            # Create adn open the main popup window
             self.addXwiWordsApp = ctk.CTkToplevel()
             self.addXwiWordsApp.title(' Score and add new words to my list')
             self.after(50, lambda: self.addXwiWordsApp.attributes('-topmost', 1))
@@ -826,21 +829,24 @@ def main():
             # self.after(200, lambda: self.addXwiWordsApp.iconbitmap('assets.bdogicon.ico'))
             # self.addXwiWordsApp.resizable(False, False)
             self.addedWords = 0
-            self.mDict = library.myDict(min_score=0)
-            self.xDict = library.xwiDict(min_score=0)
+            self.mDict = lib.myDict(min_score=0)
+            self.xDict = lib.xwiDict(min_score=0)
             # FInd all words on the xwi word list that aren't on my word list
-            self.newWords = library.getNewWords(self.xDict, self.mDict)
+            self.newWords = lib.getNewWords(self.xDict, self.mDict)
             # Get user to imput the length to work on
-            self.selectedLength = 10 # Placeholder until user input code developed
             
+            self.selectedLength = 9
+
+
+
+
+
             # Find new words of selected length
             self.newLengthWords = [x for x in self.newWords.keys() if len(x) == self.selectedLength]
 
             # Get label values
-            self.mFilename = Path(library.masterFile).stem
-            self.xFilename = Path(library.xwiFile).stem
-
-
+            self.mFilename = Path(lib.masterFile).stem
+            self.xFilename = Path(lib.xwiFile).stem
 
             self.newLengthWordCount = ctk.IntVar()
             self.newWordCount = ctk.IntVar()
@@ -864,7 +870,7 @@ def main():
 
             #     # update label and display word with new score here            
                     
-            #     open(library.masterFile,'a').write(nw + '\n')
+            #     open(lib.masterFile,'a').write(nw + '\n')
             #     self.newLengthWordCount -= 1
             #     self.newWordCount -= 1
             #     self.addedWords += 1
@@ -873,89 +879,78 @@ def main():
         
             # Create master frames
             self.masterFrame = ctk.CTkFrame(self.addXwiWordsApp, fg_color='#dcdcdc')
-            self.filenamesFrame = ctk.CTkFrame(self.masterFrame, fg_color='#dcdcdc')
+            self.headerFrame = ctk.CTkFrame(self.masterFrame, fg_color='#dcdcdc')
             self.infoFrame = ctk.CTkFrame(self.masterFrame, fg_color='#dcdcdc')
             self.workingFrame = ctk.CTkFrame(self.masterFrame, fg_color='#dcdcdc')
             self.submitButtonFrame = ctk.CTkFrame(self.workingFrame, fg_color='#dcdcdc')
             self.undoButtonFrame = ctk.CTkFrame(self.workingFrame, fg_color='#dcdcdc')
             # Create static labels (8)
-            self.arrowLabel = ctk.CTkLabel(
-                self.filenamesFrame,
-                width=50,
-                text='-->',
-                justify='center',
-                font=self.defaultFont, 
-                )
+            self.headerLabel = ctk.CTkLabel(
+                self.headerFrame,
+                # width=160,
+                text=f'{self.xFilename} --> {self.mFilename}',
+                anchor='n',
+                **self.messageHighlightStyle,
+            )
             self.spacerLabel = ctk.CTkLabel(
                 self.infoFrame,
                 width=50,
                 text='',
-                justify='center',
-                font=self.defaultFont, 
                 )
             self.lengthNewTotalLabel = ctk.CTkLabel(
                 self.infoFrame,
-                width=100,
+                width=columnWidth * 0.75,
                 text=f'{self.selectedLength} long new',
                 font=self.defaultFont, 
                 anchor='w',
                 )
             self.xwiNewTotalLabel = ctk.CTkLabel(
                 self.infoFrame,
-                width=100,
                 text='New words',
                 font=self.defaultFont, 
                 anchor='w',
                 )
             self.xwiTotalLabel = ctk.CTkLabel(
                 self.infoFrame,
-                width=100,
                 text='Total words',
                 font=self.defaultFont, 
                 anchor='w',
                 )
             self.startTotalLabel = ctk.CTkLabel(
                 self.infoFrame,
-                width=100,
+                width=columnWidth * 0.75,
                 text='Start',
                 font=self.defaultFont, 
                 anchor='w',
                 )
             self.addedTotalLabel = ctk.CTkLabel(
                 self.infoFrame,
-                width=100,
                 text=f'Added',
                 font=self.defaultFont, 
                 anchor='w',
                 )
             self.currentTotalLabel = ctk.CTkLabel(
                 self.infoFrame,
-                width=100,
                 text=f'New total',
                 font=self.defaultFont, 
                 anchor='w',
                 )
             # Create dynamic labels (10)
-            self.fromFilenameValue = ctk.CTkLabel(
-                self.filenamesFrame,
-                width=160,
-                text=f'{self.xFilename}',
-                **self.messageHighlightStyle,
-                )
-            self.toFilenameValue = ctk.CTkLabel(
-                self.filenamesFrame,
-                width=160,
-                text=f'{self.mFilename}',
-                **self.messageHighlightStyle,
-                )
+            # self.fromFilenameValue = ctk.CTkLabel(
+            #     self.headerFrame,
+            #     width=160,
+            #     text=f'{self.xFilename}',
+            #     **self.messageHighlightStyle,
+            #     )
             self.lengthNewTotalValue = ctk.CTkLabel(
                 self.infoFrame,
                 text=f'{self.newLengthWordCount.get(): 8,}',
                 font=self.defaultFont,
                 justify='right',
-                )
+            )
             self.xwiNewTotalValue = ctk.CTkLabel(
                 self.infoFrame,
+                width=columnWidth * 0.25,
                 text=f'{self.newWordCount.get(): 8,}',
                 font=self.defaultFont,
                 justify='right',
@@ -968,6 +963,7 @@ def main():
                 )
             self.startTotalValue = ctk.CTkLabel(
                 self.infoFrame,
+                width=columnWidth * 0.25,
                 text=f'{self.startWordCount: 8,}',
                 font=self.defaultFont,
                 justify='right',
@@ -986,17 +982,17 @@ def main():
                 )
             self.displayNewWordLabel = ctk.CTkLabel(
                 self.workingFrame,
-                width=200,
-                bg_color='green',
-                text=f'{self.newTotal.get(): 8,}',
+                width=columnWidth,
+                bg_color='#ffffff',
+                text=f'',
                 font=self.defaultFont,
                 justify='right',
                 )
             self.displayAddedWordLabel = ctk.CTkLabel(
                 self.workingFrame,
-                width=200,
-                bg_color='green',
-                text=f'{self.newTotal.get(): 8,}',
+                width=columnWidth,
+                bg_color='#ffffff',
+                text=f'',
                 font=self.defaultFont,
                 justify='right',
                 )
@@ -1013,6 +1009,7 @@ def main():
             # Create buttons (2)
             self.submitButton = ctk.CTkButton(
                 self.submitButtonFrame,
+                width=60,
                 text='Submit',
                 command=submitButtonClicked,
                 font=self.defaultFont,
@@ -1020,6 +1017,7 @@ def main():
                 )
             self.undoButton = ctk.CTkButton(
                 self.undoButtonFrame,
+                width=60,
                 text='Undo',
                 command=undoButtonClicked,
                 font=self.defaultFont,
@@ -1029,13 +1027,13 @@ def main():
         
             # Place master frames
             self.masterFrame.grid(row=0, column=0)
-            self.filenamesFrame.grid(row=0, column=0, padx=(12, 12), pady=(12, 12), sticky='ew')
+            self.headerFrame.grid(row=0, column=0, padx=(12, 12), pady=(12, 12), sticky='ew')
             self.infoFrame.grid(row=1, column=0, padx=(12, 12), pady=(12, 12), sticky='ew')
             self.workingFrame.grid(row=2, column=0, padx=(12, 12), pady=(12, 12), sticky='ew')
             self.submitButtonFrame.grid(row=1, column=1, padx=(12, 12), pady=(12, 12))
             self.undoButtonFrame.grid(row=1, column=2, padx=(12, 12), pady=(12, 12))
             # Place static labels
-            self.arrowLabel.grid(row=0, column=1, padx=(0, 0), pady=(12, 6), sticky='new')
+            # self.arrowLabel.grid(row=0, column=1, padx=(0, 0), pady=(12, 6), sticky='new')
             self.spacerLabel.grid(row=0, column=2, padx=(0, 0), pady=(0, 0), sticky='new')
             self.lengthNewTotalLabel.grid(row=0, column=0, padx=(12, 12), pady=(0, 0), sticky='nw')
             self.xwiNewTotalLabel.grid(row=1, column=0, padx=(12, 12), pady=(0 ,0), sticky='nw')
@@ -1044,19 +1042,19 @@ def main():
             self.addedTotalLabel.grid(row=1, column=3, padx=(12, 12), pady=(0 ,0), sticky='nw')
             self.currentTotalLabel.grid(row=2, column=3, padx=(12, 12), pady=(0 ,0), sticky='nw')
             # Place dynamic labels
-            self.fromFilenameValue.grid(row=0, column=0, padx=(12, 0), pady=(12 ,6), sticky='new')
-            self.toFilenameValue.grid(row=0, column=2, padx=(0, 12), pady=(12 ,6), sticky='new')
+            # self.fromFilenameValue.grid(row=0, column=0, padx=(12, 0), pady=(12 ,6), sticky='new')
+            self.headerLabel.pack()#grid(row=0, column=0, padx=(12, 12), pady=(12 ,6))
             self.lengthNewTotalValue.grid(row=0, column=1, padx=(12, 12), pady=(0 ,0), sticky='ne')
             self.xwiNewTotalValue.grid(row=1, column=1, padx=(12, 12), pady=(0 ,0), sticky='ne')
             self.xwiTotalValue.grid(row=2, column=1, padx=(12, 12), pady=(0 ,0), sticky='ne')
             self.startTotalValue.grid(row=0, column=4, padx=(12, 12), pady=(0 ,0), sticky='ne')
             self.addedTotalValue.grid(row=1, column=4, padx=(12, 12), pady=(0 ,0), sticky='ne')
             self.currentTotalValue.grid(row=2, column=4, padx=(12, 12), pady=(0 ,0), sticky='ne')
-            self.displayNewWordLabel.grid(row=0, column=0, padx=(12, 12), pady=(12 ,12), sticky='ne')
-            self.displayAddedWordLabel.grid(row=0, column=2, padx=(12, 12), pady=(12 ,12), sticky='ne')
+            self.displayNewWordLabel.grid(row=0, column=0, padx=(12, 0), pady=(12 ,12), sticky='ne')
+            self.displayAddedWordLabel.grid(row=0, column=2, padx=(0, 12), pady=(12 ,12), sticky='ne')
 
             # Place entry box
-            self.entryBox.grid(row=0, column=1, padx=(12, 12), pady=(12, 12))
+            self.entryBox.grid(row=0, column=1, padx=(0, 0), pady=(12, 12))
             # Place buttons
             self.submitButton.grid(row=0, column=0, padx=(12, 12), pady=(12, 12))
             self.undoButton.grid(row=0, column=0, padx=(12, 12), pady=(12 ,12))

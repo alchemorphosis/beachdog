@@ -3,6 +3,7 @@ import sys
 import ssl
 import os
 from os.path import exists
+import customtkinter as ctk
 from customtkinter import CTk
 from pathlib import Path
 from tkinter import *
@@ -119,6 +120,21 @@ def fileToDict(open_file:Path, min_score:int=0, min_len:int=3, max_len:int=15) -
 
 # User Input
 
+# def userInputLength(frame):
+#     def returnLength(choice):
+#         global userSelectedLength
+#         userSelectedLength = choice
+#         return userSelectedLength
+
+#     scores = ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
+#     menu = ctk.CTkOptionMenu(frame,
+#         values=scores,
+#         command=returnLength,
+#     )
+#     menu.pack()
+#     userScoreInputPopup.mainloop()
+#     # return userSelectedLength
+
 def userInputOpenFilePath(prompt:str='Select a file to open') -> Path:
     """Returns the full path of a user-selected file to open"""
     from tkinter.filedialog import askopenfilename
@@ -149,11 +165,19 @@ def CenterWindowToDisplay(Screen: CTk, width: int, height: int, scale_factor: fl
 
 def getNewWords(new_dict:dict[str,int], old_dict:dict[str,int]) -> dict[str,int]:
     """Returns a scored list of new words on a list"""
-    outDict = {}
+    newWords = {}
     for word, value in new_dict.items():
         if word not in old_dict.keys():
-            outDict.update({word: value})
-    return outDict
+            newWords.update({word: value})
+    return newWords
+
+# def getNewWords(new_dict:dict[str,int], old_dict:dict[str,int]) -> dict[str,int]:
+#     """Returns a scored list of new words on a list"""
+#     newWords = {}
+#     for word, value in new_dict.items():
+#         if word not in old_dict.keys():
+#             newWords.update({word: value})
+#     return newWords
 
 def print2d(input_list:list, title:str='') -> None:
     """Prints a list in two dimensions"""
