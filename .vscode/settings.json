@@ -1,12 +1,11 @@
 {
 	"python.REPL.enableREPLSmartSend": false,
-	"python.analysis.extraPaths": [
-		"./.library"
-	],
+	// "python.analysis.extraPaths": [
+	// 	"./.library"
+	// ],
 		
 	"files.autoSave": "afterDelay",
 	"window.title": "${dirty} ${activeEditorMedium}${separator}${rootName}",
-	// "window.title": "${dirty} ${activeEditorMedium}${separator}${rootName}",
 
 	"workbench.editor.showTabs": "multiple",
 	"workbench.editor.enablePreview": false,
