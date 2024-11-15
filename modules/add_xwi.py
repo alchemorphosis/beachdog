@@ -57,20 +57,20 @@ def runAddXwiWords(self):
     self.newTotal = self.startWordCount + self.addedCount
 
     # Process words
-    for w in self.newLengthWords:
-        wo, so = w.split(';')
-        self.newWordDisplayString = f'{wo}{' '*(16 - len(wo))}{so}'
-        # update label and display word and score here
-        ns = get_new_score()
-        nw = wo + ';' + ns
+    # for w in self.newLengthWords:
+    #     wo, so = w.split(';')
+    #     self.newWordDisplayString = f'{wo}{' '*(16 - len(wo))}{so}'
+    #     # update label and display word and score here
+    #     ns = get_new_score()
+    #     nw = wo + ';' + ns
 
-        # update label and display word with new score here            
+    #     # update label and display word with new score here            
             
-        open(library.masterFile,'a').write(nw + '\n')
-        self.newLengthWordCount -= 1
-        self.newWordCount -= 1
-        self.addedWords += 1
-        self.newTotal += 1
+    #     open(library.masterFile,'a').write(nw + '\n')
+    #     self.newLengthWordCount -= 1
+    #     self.newWordCount -= 1
+    #     self.addedWords += 1
+    #     self.newTotal += 1
             
 
 

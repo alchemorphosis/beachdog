@@ -150,9 +150,9 @@ def CenterWindowToDisplay(Screen: CTk, width: int, height: int, scale_factor: fl
 def getNewWords(new_dict:dict[str,int], old_dict:dict[str,int]) -> dict[str,int]:
     """Returns a scored list of new words on a list"""
     outDict = {}
-    for word in new_dict:
-        if word not in old_dict:
-            outDict.update({word: new_dict[word]})
+    for word, value in new_dict.items():
+        if word not in old_dict.keys():
+            outDict.update({word: value})
     return outDict
 
 def print2d(input_list:list, title:str='') -> None:
