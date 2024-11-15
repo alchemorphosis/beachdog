@@ -147,14 +147,13 @@ def CenterWindowToDisplay(Screen: CTk, width: int, height: int, scale_factor: fl
     y = int(((screen_height/2) - (height/1.5)) * scale_factor)
     return f"{width}x{height}+{x}+{y}"
 
-def getNewWords(new_dict:dict[str,int], old_dict:dict[str,int]) -> list[str]:
+def getNewWords(new_dict:dict[str,int], old_dict:dict[str,int]) -> dict[str,int]:
     """Returns a scored list of new words on a list"""
-    out_list = []
+    outDict = {}
     for word in new_dict:
         if word not in old_dict:
-            s = word + ';' + str(new_dict[word])
-            out_list.append(s)
-    return sorted(list(set(out_list)))
+            outDict.update({word: new_dict[word]})
+    return outDict
 
 def print2d(input_list:list, title:str='') -> None:
     """Prints a list in two dimensions"""

@@ -2,7 +2,6 @@ import customtkinter as ctk
 import library.beachdoglib as library
 import modules.analyze as analyze
 import modules.changes as changes
-import modules.regex as regex
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from pathlib import Path
@@ -175,8 +174,6 @@ def main():
             
             if scriptName == 'changes':
                 self.runChanges()
-            # elif scriptName == 'regex':
-            #     self.runRegexApplet()
             elif scriptName == 'analyze':
                 self.runAnalyzePuzzle()
             elif scriptName == 'fetch':
@@ -239,7 +236,7 @@ def main():
 
                 self.submitButton.configure(state='enabled')
             
-            # If results, open the main popup frame
+            # Create adn open the main popup window
             self.regexApp = ctk.CTkToplevel()
             self.regexApp.title(' Regex Search')
             self.after(50, lambda: self.regexApp.attributes('-topmost', 1))
