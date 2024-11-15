@@ -1,5 +1,4 @@
-from library.beachdoglib import *
-from pathlib import Path
+import library.beachdoglib as library
 
 def main():
     def sw1(scr: int) -> int:
@@ -15,8 +14,8 @@ def main():
     sc = [[0] * 6 for x in range(6)]
 
     # Load dictionaries
-    mDict = myDict(min_score=0)
-    jDict = xwiDict(min_score=0)
+    mDict = library.myDict(min_score=0)
+    jDict = library.xwiDict(min_score=0)
 
     # Main loop to compare scores
     for word in jDict:

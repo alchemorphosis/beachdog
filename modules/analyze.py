@@ -1,4 +1,4 @@
-from library.beachdoglib import *
+import library.beachdoglib as library
 from pathlib import Path
 
 def loadAcrossLiteFile(inputFile:Path) -> list[str]:
@@ -22,7 +22,7 @@ def loadAcrossLiteFile(inputFile:Path) -> list[str]:
         return puzzleGrid
 
     except:
-        opCancel('')
+        library.opCancel('')
 
 def puzzleLayout(grid:list[str]) -> tuple[list[list[int]], dict[int, str], dict[int, str]]:
     """Returns the numbering grid and across and down dictionaries."""
@@ -155,7 +155,7 @@ def fillWordsList(across:dict[int,str], down:dict[int,str]) -> list[str]:
 
 def fillWordsScores(words:list[str]) -> dict[str,int]:
     """Returns dictionary of words in the fill with scores"""
-    gDict = goldDict(min_score=0)
+    gDict = library.goldDict(min_score=0)
     scores = {word: gDict[word] for word in words}
     return scores
 
@@ -174,7 +174,7 @@ def fillCountLetters(grid:list[str]) -> dict[str,int]:
 
 def fillCountUniques(scores:list[str]) -> int:
     """Returns the number of unique words in the fill that are not in Jeff's list (xDict)."""
-    xDict = xwiDict()
+    xDict = library.xwiDict()
     return len([word for word in scores if word not in xDict])
 
 def fillCountOvers(scores: dict[str,int]) -> int:
@@ -188,7 +188,7 @@ def fillAvergeScrabble(puzzleGrid:list[str]) -> float:
     for i in range(len(puzzleGrid)):
         for j in range(len(puzzleGrid[0])):
             if puzzleGrid[i][j] != '.':
-                t += SCRABBLE_VALUES[puzzleGrid[i][j]]
+                t += library.SCRABBLE_VALUES[puzzleGrid[i][j]]
     
     a = t / (len(puzzleGrid) * len(puzzleGrid[0]) - gridCountBlocks(puzzleGrid))
     return a

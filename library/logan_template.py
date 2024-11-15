@@ -1,9 +1,7 @@
 import sys
-sys.path.append('.library')
-from logan import *
-os.system('cls')
+import os
+import library.beachdoglib as library
 
-#+=============================================================================#
 
 # Define main() function
 def main():

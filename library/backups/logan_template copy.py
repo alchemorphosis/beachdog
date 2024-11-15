@@ -1,6 +1,6 @@
 import sys
 sys.path.append('.library')
-from logan import *
+from library.backups.logan import *
 os.system('cls')
 
 #+=============================================================================#

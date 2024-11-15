@@ -1,7 +1,7 @@
+import customtkinter as ctk
+import library.beachdoglib as library
 import modules.analyze as analyze
 import modules.changes as changes
-import customtkinter as ctk
-from library.beachdoglib import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from pathlib import Path
@@ -196,7 +196,7 @@ def main():
                     self.fileSaveButton.grid_remove()
                     self.filenameSavedToLabel.grid_remove()
                     # Perform the search
-                    self.regexResults = sorted(regx(self.regexString), key=len)
+                    self.regexResults = sorted(library.regx(self.regexString), key=len)
                     # Display the results, if any
                     if len(self.regexResults) == 10000:
                         self.max = '(max) '
@@ -224,13 +224,13 @@ def main():
                 # Disable Save to File button
                 self.fileSaveButton.configure(state='enabled')
                 # Get save filename from user and write list to file
-                self.outputFile = userInputSaveAsFile()
+                self.outputFile = library.userInputSaveAsFile()
                 self.after(50, lambda: self.regexApp.attributes('-topmost', 1))
                 self.after(50, lambda: self.regexApp.attributes('-topmost', 0))
                 # Write result to file
                 if self.outputFile:
                     self.fileSaveButton.grid_remove()
-                    listToFile(self.regexResults, self.outputFile)
+                    library.listToFile(self.regexResults, self.outputFile)
                     # Inform results of file save
                     self.fileFrameMessageLabel.configure(text=f'{len(self.regexResults):,} results saved to')
                     self.filenameSavedToLabel.configure(text=f'{Path(self.outputFile).name}')
@@ -396,7 +396,7 @@ def main():
                     x = j * self.blockSize# + self.lineWidth
                     draw.line(((x, 0), (x, self.canvasWidth - self.lineWidth)), fill='#000000', width=self.lineWidth)
                 # PIL image can be saved as .png .jpg .gif or .bmp file (among others)
-                outputFile = userInputSaveAsFile()
+                outputFile = library.userInputSaveAsFile()
                 if outputFile:
                     image1.save(outputFile)
                 else:
@@ -675,7 +675,7 @@ def main():
             self.lineWidth = 2
             self.analyzeTabButtonNames = ['Stats', 'Lengths', 'Words', 'Crossers']
 
-            self.inputFile = userInputOpenFilePath()
+            self.inputFile = library.userInputOpenFilePath()
             self.puzzleGrid = analyze.loadAcrossLiteFile(self.inputFile)
             self.rows = len(self.puzzleGrid)
             self.cols = len(self.puzzleGrid[0])
@@ -747,14 +747,14 @@ def main():
 
         def fetchClues(self):
             # Get the puzzle file from the user
-            self.inputFile = userInputOpenFilePath('Select puzzle to get clues for')
+            self.inputFile = library.userInputOpenFilePath('Select puzzle to get clues for')
             # Extract the puzzle's words
             self.puzzleGrid = analyze.loadAcrossLiteFile(self.inputFile)
             self.numbering, self.across, self.down = analyze.puzzleLayout(self.puzzleGrid)
             self.words = analyze.fillWordsList(self.across, self.down)
 
             # Open the file containing the clues
-            with open(clueFile, 'r') as f:
+            with open(library.clueFile, 'r') as f:
                 clueList = [line.strip() for line in f if line.strip()]
             
             # Find clues for words in the puzzle
