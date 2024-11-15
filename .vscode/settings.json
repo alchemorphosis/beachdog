@@ -1,0 +1,22 @@
+{
+	"python.REPL.enableREPLSmartSend": false,
+	"python.analysis.extraPaths": [
+		"./.library"
+	],
+		
+	"files.autoSave": "afterDelay",
+	"window.title": "${dirty} ${activeEditorMedium}${separator}${rootName}",
+	// "window.title": "${dirty} ${activeEditorMedium}${separator}${rootName}",
+
+	"workbench.editor.showTabs": "multiple",
+	"workbench.editor.enablePreview": false,
+	
+	"editor.fontFamily": "Fira Code Light",
+	"editor.fontSize":13,
+	"editor.detectIndentation": true,
+	"editor.insertSpaces": true,
+	"editor.tabSize": 4,
+	"editor.minimap.renderCharacters": false,
+	"editor.minimap.maxColumn": 200,
+	"editor.minimap.showSlider": "always"
+}

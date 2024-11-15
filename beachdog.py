@@ -2,6 +2,7 @@ import customtkinter as ctk
 import library.beachdoglib as library
 import modules.analyze as analyze
 import modules.changes as changes
+import modules.regex as regex
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from pathlib import Path
@@ -9,8 +10,6 @@ from PIL import Image, ImageDraw, ImageFont
 
 ctk.set_appearance_mode('light')
 ctk.set_default_color_theme('dark-blue')
-
-# Inserted a comment to test
 
 def main():
     class MainMenu(ctk.CTkFrame):
@@ -176,13 +175,13 @@ def main():
             
             if scriptName == 'changes':
                 self.runChanges()
-            elif scriptName == 'regex':
-                self.runRegexApplet()
+            # elif scriptName == 'regex':
+            #     self.runRegexApplet()
             elif scriptName == 'analyze':
                 self.runAnalyzePuzzle()
             elif scriptName == 'fetch':
                 self.fetchClues()
-            
+
         def runRegexApplet(self):
 
             def regexSubmitButtonClicked():
