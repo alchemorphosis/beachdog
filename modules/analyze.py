@@ -1,29 +1,6 @@
 import library.beachdoglib as library
 from pathlib import Path
 
-def loadAcrossLiteFile(inputFile:Path) -> list[str]:
-    """Creates the master grid list from the input file"""
-    try:
-        with Path(inputFile).open() as f:
-            data = f.read().replace('\t', '    ')  # Replacing tabs with spaces
-
-        # Extract size and grid sections
-        sizeStart = data.find('<SIZE>') + 11
-        gridStart = data.find('<GRID>') + 11
-
-        # Get row and column counts
-        rows = int(data[sizeStart : sizeStart + 2])
-        cols = int(data[sizeStart + 3 : sizeStart + 5])
-    
-        # Extract grid data
-        puzzleGrid = [data[gridStart + (cols + 5) * i: gridStart + (cols + 5) * i + cols].strip()
-                for i in range(rows)]
-
-        return puzzleGrid
-
-    except:
-        library.opCancel('')
-
 def puzzleLayout(grid:list[str]) -> tuple[list[list[int]], dict[int, str], dict[int, str]]:
     """Returns the numbering grid and across and down dictionaries."""
     across, down = {}, {}

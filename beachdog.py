@@ -380,17 +380,17 @@ def main():
                             x2, y2 = x1 + self.blockSize, y1 + self.blockSize
                             draw.rectangle(((x1, y1), (x2, y2)), fill='#000000', width=0)
                 # Fill in the letters
-                for i in range(self.rows):
-                    for j in range(self.cols):
-                        x = int(j * self.blockSize + (self.lineWidth) + self.blockSize / 2)
-                        y = int(i * self.blockSize + (self.lineWidth + self.lineWidth) + self.blockSize / 2)
-                        draw.text(
-                            (x, y),
-                            text=self.puzzleGrid[i][j],
-                            fill='#000000',
-                            anchor='mm',
-                            font=ImageFont.truetype('assets\\Monaco.ttf', int(self.blockSize / 2 + 3))
-                        )
+                # for i in range(self.rows):
+                #     for j in range(self.cols):
+                #         x = int(j * self.blockSize + (self.lineWidth) + self.blockSize / 2)
+                #         y = int(i * self.blockSize + (self.lineWidth + self.lineWidth) + self.blockSize / 2)
+                #         draw.text(
+                #             (x, y),
+                #             text=self.puzzleGrid[i][j],
+                #             fill='#000000',
+                #             anchor='mm',
+                #             font=ImageFont.truetype('assets\\Monaco.ttf', int(self.blockSize / 2 + 3))
+                #         )
                 # Draw grid lines
                 for i in range(self.rows + 1):
                     y = i * self.blockSize# + self.lineWidth
@@ -679,7 +679,7 @@ def main():
             self.analyzeTabButtonNames = ['Stats', 'Lengths', 'Words', 'Crossers']
 
             self.inputFile = lib.userInputOpenFilePath()
-            self.puzzleGrid = analyze.loadAcrossLiteFile(self.inputFile)
+            self.puzzleGrid = lib.loadAcrossLiteFile(self.inputFile)
             self.rows = len(self.puzzleGrid)
             self.cols = len(self.puzzleGrid[0])
             self.numbering, self.across, self.down = analyze.puzzleLayout(self.puzzleGrid)
@@ -710,7 +710,7 @@ def main():
             self.missingLetters = analyze.missingLetters(self.puzzleGrid)
             # Set up main window
             self.puzzleAnalysis = ctk.CTkToplevel(fg_color='#ffffff')
-            self.puzzleAnalysis.resizable(False,False)
+            # self.puzzleAnalysis.resizable(False,False)
             self.puzzleAnalysis.title(f' Puzzle Analysis - {Path(self.inputFile).stem}')
             self.after(200, lambda: self.puzzleAnalysis.attributes('-topmost', 1))
             self.after(200, lambda: self.puzzleAnalysis.attributes('-topmost', 0))
@@ -752,7 +752,7 @@ def main():
             # Get the puzzle file from the user
             self.inputFile = lib.userInputOpenFilePath('Select puzzle to get clues for')
             # Extract the puzzle's words
-            self.puzzleGrid = analyze.loadAcrossLiteFile(self.inputFile)
+            self.puzzleGrid = lib.loadAcrossLiteFile(self.inputFile)
             self.numbering, self.across, self.down = analyze.puzzleLayout(self.puzzleGrid)
             self.words = analyze.fillWordsList(self.across, self.down)
 
@@ -795,7 +795,6 @@ def main():
                 wo, so = word.split(';')
                 print(f'          {wo} {so} ', end='', flush=True)
 
-
             # def get_new_score():
             #     """Returns new word score as a two chararcter string."""
             #     prompt = '(Q, W, E, R, X, ENTER): '
@@ -817,9 +816,17 @@ def main():
                 pass
             def undoButtonClicked():
                 pass
+            
+            def setSelectedLength(choice):
+                self.entryBox.configure(state='disabled')
+                # global selectedLength
+                self.selectedLength.set(self, value=choice)
+                
 
             # Set column width
             columnWidth = 160
+            lengths = ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
+
 
             # Create adn open the main popup window
             self.addXwiWordsApp = ctk.CTkToplevel()
@@ -834,8 +841,11 @@ def main():
             # FInd all words on the xwi word list that aren't on my word list
             self.newWords = lib.getNewWords(self.xDict, self.mDict)
             # Get user to imput the length to work on
-            
-            self.selectedLength = 9
+
+            # Get word length to process
+
+            self.selectedLength = ctk.IntVar()
+
 
 
 
@@ -884,14 +894,20 @@ def main():
             self.workingFrame = ctk.CTkFrame(self.masterFrame, fg_color='#dcdcdc')
             self.submitButtonFrame = ctk.CTkFrame(self.workingFrame, fg_color='#dcdcdc')
             self.undoButtonFrame = ctk.CTkFrame(self.workingFrame, fg_color='#dcdcdc')
-            # Create static labels (8)
+            # Create static labels
             self.headerLabel = ctk.CTkLabel(
                 self.headerFrame,
-                # width=160,
-                text=f'{self.xFilename} --> {self.mFilename}',
-                anchor='n',
+                text=f'{self.xFilename}  ->  {self.mFilename}',
                 **self.messageHighlightStyle,
             )
+            self.userInputLength = ctk.CTkOptionMenu(
+                self.headerFrame,
+                values=lengths,
+                width=60,
+                font=self.monoFont,
+                command=self.setSelectedLength,
+            )
+            # self.userInputLength.configure(value=10)
             self.spacerLabel = ctk.CTkLabel(
                 self.infoFrame,
                 width=50,
@@ -935,13 +951,6 @@ def main():
                 font=self.defaultFont, 
                 anchor='w',
                 )
-            # Create dynamic labels (10)
-            # self.fromFilenameValue = ctk.CTkLabel(
-            #     self.headerFrame,
-            #     width=160,
-            #     text=f'{self.xFilename}',
-            #     **self.messageHighlightStyle,
-            #     )
             self.lengthNewTotalValue = ctk.CTkLabel(
                 self.infoFrame,
                 text=f'{self.newLengthWordCount.get(): 8,}',
@@ -996,8 +1005,8 @@ def main():
                 font=self.defaultFont,
                 justify='right',
                 )
-
-            # Create entry box (1)
+            # Create option menu for length input
+            # Create entry box
             self.entryBox = ctk.CTkEntry(
                 self.workingFrame,
                 width=10,
@@ -1006,7 +1015,7 @@ def main():
                 border_color=self.mainMenuButtonFg,
                 corner_radius=6,
                 )
-            # Create buttons (2)
+            # Create buttons
             self.submitButton = ctk.CTkButton(
                 self.submitButtonFrame,
                 width=60,
@@ -1023,8 +1032,6 @@ def main():
                 font=self.defaultFont,
                 state='normal',
                 )
-        
-        
             # Place master frames
             self.masterFrame.grid(row=0, column=0)
             self.headerFrame.grid(row=0, column=0, padx=(12, 12), pady=(12, 12), sticky='ew')
@@ -1033,7 +1040,6 @@ def main():
             self.submitButtonFrame.grid(row=1, column=1, padx=(12, 12), pady=(12, 12))
             self.undoButtonFrame.grid(row=1, column=2, padx=(12, 12), pady=(12, 12))
             # Place static labels
-            # self.arrowLabel.grid(row=0, column=1, padx=(0, 0), pady=(12, 6), sticky='new')
             self.spacerLabel.grid(row=0, column=2, padx=(0, 0), pady=(0, 0), sticky='new')
             self.lengthNewTotalLabel.grid(row=0, column=0, padx=(12, 12), pady=(0, 0), sticky='nw')
             self.xwiNewTotalLabel.grid(row=1, column=0, padx=(12, 12), pady=(0 ,0), sticky='nw')
@@ -1042,8 +1048,8 @@ def main():
             self.addedTotalLabel.grid(row=1, column=3, padx=(12, 12), pady=(0 ,0), sticky='nw')
             self.currentTotalLabel.grid(row=2, column=3, padx=(12, 12), pady=(0 ,0), sticky='nw')
             # Place dynamic labels
-            # self.fromFilenameValue.grid(row=0, column=0, padx=(12, 0), pady=(12 ,6), sticky='new')
-            self.headerLabel.pack()#grid(row=0, column=0, padx=(12, 12), pady=(12 ,6))
+            self.headerLabel.pack(padx=(0, 0), pady=(12 ,12))
+            self.userInputLength.pack(padx=(0, 0), pady=(0 ,0))
             self.lengthNewTotalValue.grid(row=0, column=1, padx=(12, 12), pady=(0 ,0), sticky='ne')
             self.xwiNewTotalValue.grid(row=1, column=1, padx=(12, 12), pady=(0 ,0), sticky='ne')
             self.xwiTotalValue.grid(row=2, column=1, padx=(12, 12), pady=(0 ,0), sticky='ne')

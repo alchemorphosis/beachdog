@@ -118,23 +118,6 @@ def fileToDict(open_file:Path, min_score:int=0, min_len:int=3, max_len:int=15) -
     """Imports a word list file to dictionary of scored words"""
     return listToDict(fileToList(open_file, min_score, min_len, max_len))
 
-# User Input
-
-# def userInputLength(frame):
-#     def returnLength(choice):
-#         global userSelectedLength
-#         userSelectedLength = choice
-#         return userSelectedLength
-
-#     scores = ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
-#     menu = ctk.CTkOptionMenu(frame,
-#         values=scores,
-#         command=returnLength,
-#     )
-#     menu.pack()
-#     userScoreInputPopup.mainloop()
-#     # return userSelectedLength
-
 def userInputOpenFilePath(prompt:str='Select a file to open') -> Path:
     """Returns the full path of a user-selected file to open"""
     from tkinter.filedialog import askopenfilename
@@ -248,4 +231,27 @@ def opCancel(exception_string:str=None) -> None:
     print(' '*15, message)
     print(' '*15, 'operation canceled', '\n\n')
     sys.exit()
+
+def loadAcrossLiteFile(inputFile:Path) -> list[str]:
+    """Creates the master grid list from the input file"""
+    try:
+        with Path(inputFile).open() as f:
+            data = f.read().replace('\t', '    ')  # Replacing tabs with spaces
+
+        # Extract size and grid sections
+        sizeStart = data.find('<SIZE>') + 11
+        gridStart = data.find('<GRID>') + 11
+
+        # Get row and column counts
+        rows = int(data[sizeStart : sizeStart + 2])
+        cols = int(data[sizeStart + 3 : sizeStart + 5])
+    
+        # Extract grid data
+        puzzleGrid = [data[gridStart + (cols + 5) * i: gridStart + (cols + 5) * i + cols].strip()
+            for i in range(rows)]
+
+        return puzzleGrid
+
+    except:
+        opCancel('')
 
