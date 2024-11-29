@@ -2,12 +2,14 @@
 import sys
 import ssl
 import os
-from os.path import exists
 import customtkinter as ctk
+# import puz
+from os.path import exists
 from customtkinter import CTk
 from pathlib import Path
 from tkinter import *
-from tkinter import ttk 
+from tkinter import ttk
+
 
 # downloads = Path().home() / 'iCloudDrive' / 'Downloads'
 # desktop = Path().home() / 'iCloudDrive' / 'Desktop'
@@ -154,14 +156,6 @@ def getNewWords(new_dict:dict[str,int], old_dict:dict[str,int]) -> dict[str,int]
             newWords.update({word: value})
     return newWords
 
-# def getNewWords(new_dict:dict[str,int], old_dict:dict[str,int]) -> dict[str,int]:
-#     """Returns a scored list of new words on a list"""
-#     newWords = {}
-#     for word, value in new_dict.items():
-#         if word not in old_dict.keys():
-#             newWords.update({word: value})
-#     return newWords
-
 def print2d(input_list:list, title:str='') -> None:
     """Prints a list in two dimensions"""
     import numpy as np
@@ -255,3 +249,10 @@ def loadAcrossLiteFile(inputFile:Path) -> list[str]:
     except:
         opCancel('')
 
+def loadPuzFile(inputFile: Path):
+    sol = inputFile.solution
+    puzzleGrid = [['' for i in range(sol.height)] for j in range(sol.width)]
+    for i in range(sol.height):
+        for j in range(sol.width):
+            puzzleGrid[i] = sol[i * sol.width:i * sol.width + j + 1]
+    return puzzleGrid
